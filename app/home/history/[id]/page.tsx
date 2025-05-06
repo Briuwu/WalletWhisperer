@@ -31,8 +31,17 @@ export default async function SpecificHistoryPage({ params }: Props) {
 
   if (!reports) {
     return (
-      <div className="space-y-5 text-center text-lg font-bold text-gray-500">
-        <p>No report available.</p>
+      <div className="space-y-2 text-center">
+        <p className="text-lg font-bold">No report available.</p>
+        <p className="text-sm text-neutral-500">
+          It seems like the session data was not enough to generate a report.
+        </p>
+        <Link
+          href="/chat"
+          className="mx-auto block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
+        >
+          start new session
+        </Link>
       </div>
     );
   }
@@ -64,8 +73,6 @@ export default async function SpecificHistoryPage({ params }: Props) {
         content: string;
       }[])
     : [];
-
-  console.log(reportsData);
 
   return (
     <div className="space-y-15 py-10">
