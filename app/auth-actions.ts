@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
@@ -20,7 +19,6 @@ export async function login(data: Auth) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/home");
 }
 
 export async function signup(data: Auth) {
@@ -33,5 +31,16 @@ export async function signup(data: Auth) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/login");
+}
+
+export async function logout() {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    throw new Error("Logout failed");
+  }
+
+  revalidatePath("/", "layout");
 }

@@ -1,6 +1,7 @@
 "use client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,6 +41,7 @@ export function LoginForm() {
           password: values.password,
         });
         toast.success("Login successful!");
+        router.push("/home");
       } catch (error) {
         console.error("Form submission error", error);
         toast.error("Failed to submit the form. Please try again.");

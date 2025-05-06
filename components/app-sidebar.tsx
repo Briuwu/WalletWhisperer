@@ -1,16 +1,33 @@
-import { Book, History, Home } from "lucide-react";
+"use client";
+import Link from "next/link";
 
+import { Book, History, Home, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { logout } from "@/app/auth-actions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // Menu items.
 const items = [
@@ -32,12 +49,24 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("Logout successful!");
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error", error);
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
   return (
     <Sidebar>
+      <SidebarHeader className="flex items-center justify-between border-b border-gray-200 p-4">
+        <h2 className="text-lg font-semibold">WalletWhisperer</h2>
+      </SidebarHeader>
       <SidebarContent>
-        <div className="flex items-center justify-between border-b border-gray-200 p-4">
-          <h2 className="text-lg font-semibold">WalletWhisperer</h2>
-        </div>
         <SidebarGroup>
           <SidebarGroupLabel className="sr-only">Application</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -56,6 +85,36 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="mb-20">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <SidebarMenuButton className="w-full justify-start">
+                  <LogOut /> Logout
+                </SidebarMenuButton>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to log out?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will end your current session and you will need to log
+                    in again.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleLogout}>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
