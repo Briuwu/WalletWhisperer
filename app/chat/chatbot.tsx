@@ -4,7 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import Image from "next/image";
 import Markdown from "react-markdown";
 
-import { Send, User } from "lucide-react";
+import { LoaderPinwheel, Send, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -51,6 +51,16 @@ export const Chatbot = () => {
 
   return (
     <>
+      {isPending && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+          <div className="grid min-h-[90dvh] place-content-center">
+            <div className="flex items-center gap-3">
+              <LoaderPinwheel className="animate-spin" />
+              <p className="animate-pulse">Ending session...</p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex max-h-[500px] flex-col gap-4 overflow-y-auto">
         {/* Chat messages */}
         <div className="flex flex-col gap-4 p-4">

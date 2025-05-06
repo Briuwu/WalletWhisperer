@@ -15,6 +15,7 @@ import { z } from "zod";
 
 import whisperer from "@/public/whisperer.png";
 import Markdown from "react-markdown";
+import Link from "next/link";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -29,6 +30,23 @@ export default async function SpecificHistoryPage({ params }: Props) {
     return (
       <div className="space-y-5 text-center text-lg font-bold text-gray-500">
         <p>No report available.</p>
+      </div>
+    );
+  }
+
+  if (reports.session_goal === "") {
+    return (
+      <div className="space-y-2 text-center">
+        <p className="text-lg font-bold">No report available.</p>
+        <p className="text-sm text-neutral-500">
+          It seems like the session data was not enough to generate a report.
+        </p>
+        <Link
+          href="/chat"
+          className="mx-auto block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
+        >
+          start new session
+        </Link>
       </div>
     );
   }

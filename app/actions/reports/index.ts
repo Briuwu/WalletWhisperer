@@ -10,12 +10,9 @@ async function generateReportData(context: string) {
     model: openai("gpt-4o-mini"),
     schema: WalletWhispererReportSchema,
     prompt: `
-    You are a financial advisor. Based on the following context, generate a detailed financial report. The report should include a summary of the session, key observations, smart suggestions, forecasts and projections, and a financial health score. Please respond using a JSON object that strictly follows this Zod schema. Omit optional fields if not relevant to the session. If there is not enough data, just add an empty string ${context}`,
+    You are a helpful and accurate financial advisor AI. Based on the session context provided, generate a detailed financial report. Only use information directly available in the context. Do not invent or infer data that isn't explicitly stated. If any required field is missing from the context, return an empty string ("") instead of null, undefined, or fabricated values. Omit optional fields that do not apply to this session or are unsupported by the context. Your response must be a valid JSON object that adheres to the given schema. Do not include any extra commentary or text. Context input: ${context}
+    `,
   });
-
-  if (!result.object) {
-    return null;
-  }
 
   return result.object;
 }
@@ -48,10 +45,6 @@ export async function generateReport(sessionId: string) {
   if (!data.has_generated_reports) {
     const object = await generateReportData(JSON.stringify(data.history));
 
-    if (!object) {
-      return null;
-    }
-
     const { data: updatedData, error: updateError } = await supabase
       .from("sessions")
       .update({
@@ -68,7 +61,7 @@ export async function generateReport(sessionId: string) {
       throw new Error(updateError.message);
     }
 
-    if (!updatedData) {
+    if (updatedData.session_goal === "") {
       return null;
     }
 
