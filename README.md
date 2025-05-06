@@ -61,10 +61,6 @@ Pull requests are welcome! If you’ve got ideas for prompts, financial insight 
 
 ## 🔗 Links
 
-- 🌐 Live App: [walletwhisperer.com](https://walletwhisperer.com)
+- 🌐 Live App: [https://walletwhisperer.vercel.app/](https://walletwhisperer.vercel.app/)
 - 🧠 Schema: [`WalletWhispererReportSchema`](./lib/schemas/report.ts)
-- 🐦 Follow: [@yourhandle](https://twitter.com/yourhandle)
-
-```
-
-```
+- 👾 Personal Website: [https://brianmillonte.vercel.app/](https://brianmillonte.vercel.app/)
