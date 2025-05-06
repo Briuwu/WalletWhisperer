@@ -25,6 +25,14 @@ export default async function SpecificHistoryPage({ params }: Props) {
 
   const reports = await generateReport(id);
 
+  if (!reports) {
+    return (
+      <div className="space-y-5 text-center text-lg font-bold text-gray-500">
+        <p>No report available.</p>
+      </div>
+    );
+  }
+
   const reportsData = reports.reports as z.infer<
     typeof WalletWhispererReportSchema
   >;

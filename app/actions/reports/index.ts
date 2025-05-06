@@ -13,6 +13,10 @@ async function generateReportData(context: string) {
     You are a financial advisor. Based on the following context, generate a detailed financial report. The report should include a summary of the session, key observations, smart suggestions, forecasts and projections, and a financial health score. Please respond using a JSON object that strictly follows this Zod schema. Omit optional fields if not relevant to the session. If there is not enough data, just add an empty string ${context}`,
   });
 
+  if (!result.object) {
+    return null;
+  }
+
   return result.object;
 }
 
@@ -38,11 +42,16 @@ export async function generateReport(sessionId: string) {
   }
 
   if (!data) {
-    throw new Error("Session not found");
+    return null;
   }
 
   if (!data.has_generated_reports) {
     const object = await generateReportData(JSON.stringify(data.history));
+
+    if (!object) {
+      return null;
+    }
+
     const { data: updatedData, error: updateError } = await supabase
       .from("sessions")
       .update({
@@ -57,6 +66,10 @@ export async function generateReport(sessionId: string) {
 
     if (updateError) {
       throw new Error(updateError.message);
+    }
+
+    if (!updatedData) {
+      return null;
     }
 
     return updatedData;
