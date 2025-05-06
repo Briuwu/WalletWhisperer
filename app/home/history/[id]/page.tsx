@@ -16,6 +16,9 @@ import { z } from "zod";
 import whisperer from "@/public/whisperer.png";
 import Markdown from "react-markdown";
 import Link from "next/link";
+import { FinancialHealthCard } from "./financial-health-card";
+import { FinancialSnapshot } from "./financial-snapshot";
+import ForecastsAndProjections from "./forecasts-and-projections";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -62,6 +65,8 @@ export default async function SpecificHistoryPage({ params }: Props) {
       }[])
     : [];
 
+  console.log(reportsData);
+
   return (
     <div className="space-y-15 py-10">
       <div>
@@ -71,7 +76,7 @@ export default async function SpecificHistoryPage({ params }: Props) {
           reports
         </p>
       </div>
-      <div className="grid grid-cols-[.5fr_1fr] gap-5">
+      <div className="grid gap-5 lg:grid-cols-[.5fr_1fr]">
         <div className="space-y-3 rounded-md border border-blue-500 p-4">
           <Goal />
           <p className="text-neutral-600">{reportsData.sessionGoal}</p>
@@ -126,6 +131,19 @@ export default async function SpecificHistoryPage({ params }: Props) {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <FinancialHealthCard
+          financialHealthScore={reportsData.financialHealthScore}
+        />
+        <FinancialSnapshot financialSnapshot={reportsData.financialSnapshot} />
+        {reportsData.forecastsAndProjections.debtPayoffProjection.currentPlan &&
+          reportsData.forecastsAndProjections.vacationSavingsGoal.amount && (
+            <ForecastsAndProjections
+              forecastsAndProjections={reportsData.forecastsAndProjections}
+            />
+          )}
       </div>
 
       <div className="space-y-3">

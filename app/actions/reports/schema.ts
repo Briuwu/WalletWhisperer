@@ -22,9 +22,10 @@ export const WalletWhispererReportSchema = z.object({
 
   financialSnapshot: z
     .object({
+      currency: z.string().describe("User's currency (e.g., USD, EUR)."),
       monthlyIncome: z
         .number()
-        .describe("The user's reported monthly income in dollars."),
+        .describe("The user's reported monthly income in user currency."),
       fixedExpenses: z.number().describe("Total fixed monthly expenses."),
       variableExpenses: z.number().describe("Total variable monthly expenses"),
       currentSavingsRatePercent: z
@@ -42,7 +43,7 @@ export const WalletWhispererReportSchema = z.object({
               ),
             amount: z
               .number()
-              .describe("Outstanding balance of this debt in dollars."),
+              .describe("Outstanding balance of this debt in user currency."),
             interestRate: z
               .number()
               .describe(
@@ -70,6 +71,7 @@ export const WalletWhispererReportSchema = z.object({
 
   forecastsAndProjections: z
     .object({
+      currency: z.string().describe("User's currency (e.g., USD, EUR)."),
       vacationSavingsGoal: z
         .object({
           amount: z

@@ -11,7 +11,7 @@ export default function HomeLayout({
       <AppSidebar />
       <main className="w-full">
         <SidebarTrigger />
-        <div className="mx-auto max-w-3xl">{children}</div>
+        <div className="mx-auto max-w-3xl px-5">{children}</div>
       </main>
     </SidebarProvider>
   );
