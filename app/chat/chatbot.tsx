@@ -3,12 +3,11 @@
 import { useChat } from "@ai-sdk/react";
 import Image from "next/image";
 import Markdown from "react-markdown";
-
+import { useEffect, useRef } from "react";
 import { LoaderPinwheel, Send, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
 import whisperer from "@/public/whisperer.png";
 import { EndSession } from "./end-session";
 import { generateId } from "ai";
@@ -20,16 +19,25 @@ import { useRouter } from "next/navigation";
 export const Chatbot = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
     initialMessages: [
       {
         id: "1",
         role: "assistant",
         content:
-          "Hey there! I’m WalletWhisperer, your friendly AI personal finance coach here to help you navigate the wild world of money.",
+          "Hey there! I'm WalletWhisperer, your friendly AI personal finance coach here to help you navigate the wild world of money.",
       },
     ],
   });
+
+  // Auto-scroll to the bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleEndSession = async () => {
     const id = generateId();
@@ -50,95 +58,123 @@ export const Chatbot = () => {
   };
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       {isPending && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm">
-          <div className="grid min-h-[90dvh] place-content-center">
-            <div className="flex items-center gap-3">
-              <LoaderPinwheel className="animate-spin" />
-              <p className="animate-pulse">Ending session...</p>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+          <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-lg">
+            <LoaderPinwheel className="h-5 w-5 animate-spin text-emerald-500" />
+            <p className="text-sm font-medium">Ending session...</p>
           </div>
         </div>
       )}
-      <div className="flex max-h-[500px] flex-col gap-4 overflow-y-auto">
-        {/* Chat messages */}
-        <div className="flex flex-col gap-4 p-4">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={cn(
-                "flex items-start gap-3 text-sm",
-                message.role === "user" ? "justify-end" : "justify-start",
-              )}
-            >
-              {message.role === "assistant" && (
-                <div className="w-12 rounded-full border p-2">
-                  <Image src={whisperer} alt="WalletWhisperer" />
-                </div>
-              )}
 
+      {/* Chat container with flexible height */}
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto px-2 pt-4 pb-24 md:px-4">
+          <div className="mx-auto max-w-3xl space-y-6">
+            {messages.map((message, index) => (
               <div
+                key={index}
                 className={cn(
-                  "max-w-sm rounded-md p-3",
-                  message.role === "user"
-                    ? "bg-emerald-500 text-white"
-                    : "bg-gray-200",
+                  "flex items-start gap-3",
+                  message.role === "user" ? "justify-end" : "justify-start",
                 )}
               >
-                <Markdown>{message.content}</Markdown>
-              </div>
-              {message.role === "user" && (
-                <div className="grid h-12 w-12 place-content-center rounded-full border p-2">
-                  <User />
-                </div>
-              )}
-            </div>
-          ))}
+                {message.role === "assistant" && (
+                  <div className="hidden h-10 w-10 shrink-0 overflow-hidden rounded-full border sm:flex sm:h-12 sm:w-12 sm:items-center sm:justify-center">
+                    <Image
+                      src={whisperer || "/placeholder.svg"}
+                      alt="WalletWhisperer"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
 
-          {/* Loading indicator for upcoming message */}
-          {status !== "streaming" && status !== "ready" && (
-            <div className="flex items-start justify-start gap-3 text-sm">
-              <div className="w-12 rounded-full border p-2">
-                <Image src={whisperer} alt="WalletWhisperer" />
+                <div
+                  className={cn(
+                    "prose prose-sm dark:prose-invert sm:prose-base rounded-2xl px-4 py-3 text-sm sm:text-base",
+                    message.role === "user"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-gray-100 dark:bg-gray-800",
+                    message.role === "user"
+                      ? "rounded-tr-none"
+                      : "rounded-tl-none",
+                    "max-w-[75%] sm:max-w-[70%] md:max-w-[65%]",
+                  )}
+                >
+                  <Markdown>{message.content}</Markdown>
+                </div>
+
+                {message.role === "user" && (
+                  <div className="hidden h-10 w-10 shrink-0 overflow-hidden rounded-full border bg-gray-50 sm:flex sm:h-12 sm:w-12 sm:items-center sm:justify-center">
+                    <User className="h-6 w-6 text-gray-500" />
+                  </div>
+                )}
               </div>
-              <div className="flex max-w-sm items-center gap-2 rounded-md bg-gray-200 p-3">
-                <span className="animate-pulse">
-                  WalletWhisperer is thinking...
-                </span>
-                <span className="inline-block h-2 w-2 animate-bounce rounded-full bg-emerald-500"></span>
+            ))}
+
+            {/* Loading indicator for upcoming message */}
+            {status !== "streaming" && status !== "ready" && (
+              <div className="flex items-start justify-start gap-3">
+                <div className="hidden h-10 w-10 shrink-0 overflow-hidden rounded-full border sm:flex sm:h-12 sm:w-12 sm:items-center sm:justify-center">
+                  <Image
+                    src={whisperer || "/placeholder.svg"}
+                    alt="WalletWhisperer"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex max-w-[75%] items-center gap-2 rounded-2xl rounded-tl-none bg-gray-100 px-4 py-3 sm:max-w-[70%] md:max-w-[65%] dark:bg-gray-800">
+                  <span className="text-sm sm:text-base">
+                    WalletWhisperer is thinking
+                  </span>
+                  <span className="flex space-x-1">
+                    <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-emerald-500 [animation-delay:0ms]"></span>
+                    <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-emerald-500 [animation-delay:150ms]"></span>
+                    <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-emerald-500 [animation-delay:300ms]"></span>
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className="absolute right-5 bottom-10 left-5 space-y-3"
-      >
-        <Input
-          placeholder="type your message..."
-          className="h-12 w-full rounded"
-          value={input}
-          onChange={handleInputChange}
-          disabled={status !== "ready"}
-          autoFocus
-        />
-        <div className="flex items-center justify-between">
-          <EndSession
-            status={status}
-            handleEndSession={handleEndSession}
-            isPending={isPending}
-          />
-          <Button
-            type="submit"
-            disabled={status !== "ready"}
-            className="rounded-full"
-          >
-            <Send />
-          </Button>
+
+      {/* Input form - fixed at bottom with responsive padding */}
+      <div className="bg-opacity-90 dark:bg-opacity-90 fixed right-0 bottom-0 left-0 bg-white p-3 backdrop-blur-sm sm:p-4 dark:bg-gray-950">
+        <div className="mx-auto max-w-3xl">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="relative">
+              <Input
+                placeholder="Type your message..."
+                className="h-12 w-full rounded-full border-gray-300 pr-12 pl-4 text-base focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-700"
+                value={input}
+                onChange={handleInputChange}
+                disabled={status !== "ready"}
+                autoFocus
+              />
+              <Button
+                type="submit"
+                disabled={status !== "ready"}
+                className="absolute top-1/2 right-1 h-10 w-10 -translate-y-1/2 rounded-full p-0"
+                aria-label="Send message"
+              >
+                <Send className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="flex justify-between">
+              <EndSession
+                status={status}
+                handleEndSession={handleEndSession}
+                isPending={isPending}
+              />
+              <div className="text-xs text-gray-500">
+                {status === "ready" ? "Ready to chat" : "Processing..."}
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </>
+      </div>
+    </div>
   );
 };

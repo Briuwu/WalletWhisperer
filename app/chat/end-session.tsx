@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Link from "next/link";
 
 export const EndSession = ({
   status,
@@ -30,7 +31,7 @@ export const EndSession = ({
           type="button"
           disabled={status !== "ready"}
           className="rounded-full"
-          variant="secondary"
+          variant="destructive"
         >
           <X /> end session
         </Button>
@@ -45,9 +46,11 @@ export const EndSession = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending} asChild>
+            <Link href="/home"> go back (no save)</Link>
+          </AlertDialogCancel>
           <AlertDialogAction onClick={handleEndSession} disabled={isPending}>
-            end session
+            generate report
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
