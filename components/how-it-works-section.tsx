@@ -10,7 +10,7 @@ export const HowItWorksSection = () => {
       <h2 className="text-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
         all the good stuff
       </h2>
-      <ul className="space-y-20">
+      <ul className="space-y-20 text-center md:text-left">
         <li className="grid items-center gap-10 rounded-xl bg-neutral-100 p-10 shadow lg:grid-cols-2">
           <div className="space-y-3">
             <p className="text-2xl font-bold">
