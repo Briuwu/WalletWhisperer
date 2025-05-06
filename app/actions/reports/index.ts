@@ -1,13 +1,13 @@
 "use server";
 
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { mistral } from "@ai-sdk/mistral";
 import { WalletWhispererReportSchema } from "./schema";
 import { createClient } from "@/utils/supabase/server";
 
 async function generateReportData(context: string) {
   const result = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: mistral("mistral-small-latest"),
     schema: WalletWhispererReportSchema,
     prompt: `
     You are a helpful and accurate financial advisor AI. Based on the session context provided, generate a detailed financial report. Only use information directly available in the context. Do not invent or infer data that isn't explicitly stated. If any required field is missing from the context, return an empty string ("") instead of null, undefined, or fabricated values. Omit optional fields that do not apply to this session or are unsupported by the context. Your response must be a valid JSON object that adheres to the given schema. Do not include any extra commentary or text. Context input: ${context}
