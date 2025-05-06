@@ -139,11 +139,15 @@ export default async function SpecificHistoryPage({ params }: Props) {
         />
         <FinancialSnapshot financialSnapshot={reportsData.financialSnapshot} />
         {reportsData.forecastsAndProjections.debtPayoffProjection.currentPlan &&
-          reportsData.forecastsAndProjections.vacationSavingsGoal.amount && (
-            <ForecastsAndProjections
-              forecastsAndProjections={reportsData.forecastsAndProjections}
-            />
-          )}
+        reportsData.forecastsAndProjections.vacationSavingsGoal.amount ? (
+          <ForecastsAndProjections
+            forecastsAndProjections={reportsData.forecastsAndProjections}
+          />
+        ) : (
+          <div className="bg-card text-card-foreground rounded-xl border p-6 text-center shadow-sm">
+            No forecasts or projections available.
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
