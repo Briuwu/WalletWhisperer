@@ -96,7 +96,7 @@ export default function ForecastsAndProjections({
   const dateProgress = calculateDateProgress();
 
   return (
-    <Card className="col-span-full">
+    <Card>
       <CardHeader>
         <CardTitle className="text-xl">Forecasts & Projections</CardTitle>
         <CardDescription>

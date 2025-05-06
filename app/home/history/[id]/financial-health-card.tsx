@@ -36,7 +36,7 @@ export function FinancialHealthCard({ financialHealthScore }: Props) {
   const gradeColor = getGradeColor(financialHealthScore.grade);
 
   return (
-    <Card>
+    <Card className="col-span-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-xl">
           Financial Health Score
