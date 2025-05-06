@@ -55,7 +55,7 @@ export function AppSidebar() {
     try {
       await logout();
       toast.success("Logout successful!");
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       console.error("Logout error", error);
       toast.error("Failed to log out. Please try again.");
