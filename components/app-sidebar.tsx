@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-import { Book, History, Home, LogOut } from "lucide-react";
+import { History, Home, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -36,11 +36,11 @@ const items = [
     url: "/home",
     icon: Home,
   },
-  {
-    title: "Profile",
-    url: "#",
-    icon: Book,
-  },
+  // {
+  //   title: "Profile",
+  //   url: "#",
+  //   icon: Book,
+  // },
   {
     title: "History",
     url: "/home/history",
