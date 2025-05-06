@@ -4,15 +4,22 @@ import { useChat } from "@ai-sdk/react";
 import Image from "next/image";
 import Markdown from "react-markdown";
 
-import { Send, User, X } from "lucide-react";
+import { Send, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import whisperer from "@/public/whisperer.png";
+import { EndSession } from "./end-session";
 import { generateId } from "ai";
+import { useTransition } from "react";
+import { toast } from "sonner";
+import { endSession } from "@/app/actions/chat";
+import { useRouter } from "next/navigation";
 
 export const Chatbot = () => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
     initialMessages: [
       {
@@ -26,7 +33,20 @@ export const Chatbot = () => {
 
   const handleEndSession = async () => {
     const id = generateId();
-    console.log(`Session ended with ID: ${id}`);
+    const messagesData = messages.map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
+    startTransition(async () => {
+      try {
+        await endSession(id, messagesData);
+        toast.success("Session ended successfully!");
+        router.push("/home/history");
+      } catch (error) {
+        console.error("Error ending session:", error);
+        toast.error("Error ending session. Please try again.");
+      }
+    });
   };
 
   return (
@@ -95,15 +115,11 @@ export const Chatbot = () => {
           autoFocus
         />
         <div className="flex items-center justify-between">
-          <Button
-            type="button"
-            disabled={status !== "ready"}
-            className="rounded-full"
-            variant="secondary"
-            onClick={handleEndSession}
-          >
-            <X /> end session
-          </Button>
+          <EndSession
+            status={status}
+            handleEndSession={handleEndSession}
+            isPending={isPending}
+          />
           <Button
             type="submit"
             disabled={status !== "ready"}

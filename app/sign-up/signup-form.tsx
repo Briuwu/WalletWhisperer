@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signup } from "../auth-actions";
+import { signup } from "../actions/auth-actions";
 import { useTransition } from "react";
 
 const formSchema = z

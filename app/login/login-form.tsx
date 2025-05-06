@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
-import { login } from "../auth-actions";
+import { login } from "../actions/auth-actions";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),

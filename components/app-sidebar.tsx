@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { logout } from "@/app/auth-actions";
+import { logout } from "@/app/actions/auth-actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -33,7 +33,7 @@ import { toast } from "sonner";
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/home",
     icon: Home,
   },
   {
@@ -43,7 +43,7 @@ const items = [
   },
   {
     title: "History",
-    url: "#",
+    url: "/home/history",
     icon: History,
   },
 ];
