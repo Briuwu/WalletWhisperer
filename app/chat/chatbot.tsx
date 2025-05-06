@@ -65,14 +65,16 @@ export const Chatbot = () => {
               )}
             </div>
           ))}
-          {status === "streaming" && (
+
+          {/* Loading indicator for upcoming message */}
+          {status !== "streaming" && status !== "ready" && (
             <div className="flex items-start justify-start gap-3 text-sm">
               <div className="w-12 rounded-full border p-2">
                 <Image src={whisperer} alt="WalletWhisperer" />
               </div>
               <div className="flex max-w-sm items-center gap-2 rounded-md bg-gray-200 p-3">
                 <span className="animate-pulse">
-                  WalletWhisperer is typing...
+                  WalletWhisperer is thinking...
                 </span>
                 <span className="inline-block h-2 w-2 animate-bounce rounded-full bg-emerald-500"></span>
               </div>
