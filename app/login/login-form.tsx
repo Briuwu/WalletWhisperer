@@ -41,6 +41,7 @@ export function LoginForm() {
           password: values.password,
         });
         toast.success("Login successful!");
+        await new Promise((resolve) => setTimeout(resolve, 100));
         router.push("/home");
       } catch (error) {
         console.error("Form submission error", error);
