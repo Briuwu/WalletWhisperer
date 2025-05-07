@@ -57,6 +57,77 @@ export const WalletWhispererReportSchema = z.object({
       "Snapshot of the user's income, expenses, and debt at the time of the session.",
     ),
 
+  recentAchievements: z
+    .array(
+      z.object({
+        achievement: z
+          .string()
+          .describe("Description of the financial milestone achieved."),
+        date: z
+          .string()
+          .describe(
+            "Date when the achievement was reached (e.g., '2024-03-15').",
+          ),
+        impact: z
+          .string()
+          .describe(
+            "Brief explanation of how this achievement benefits the user's financial health.",
+          ),
+      }),
+    )
+    .describe(
+      "Financial milestones and achievements reached since the last session.",
+    ),
+
+  netWorth: z
+    .object({
+      total: z.number().describe("Current total net worth in user's currency."),
+      changeSinceLast: z
+        .number()
+        .describe(
+          "Change in net worth since the last session (positive or negative).",
+        ),
+      assetBreakdown: z
+        .array(
+          z.object({
+            type: z
+              .string()
+              .describe(
+                "Type of asset (e.g., savings, investments, property).",
+              ),
+            value: z
+              .number()
+              .describe("Current value of the asset in user's currency."),
+            percentageOfTotal: z
+              .number()
+              .describe("Percentage this asset represents of total assets."),
+          }),
+        )
+        .describe("Detailed breakdown of assets and their values."),
+      liabilityBreakdown: z
+        .array(
+          z.object({
+            type: z
+              .string()
+              .describe(
+                "Type of liability (e.g., mortgage, credit card debt).",
+              ),
+            value: z
+              .number()
+              .describe("Current value of the liability in user's currency."),
+            percentageOfTotal: z
+              .number()
+              .describe(
+                "Percentage this liability represents of total liabilities.",
+              ),
+          }),
+        )
+        .describe("Detailed breakdown of liabilities and their values."),
+    })
+    .describe(
+      "Comprehensive overview of the user's net worth and its components.",
+    ),
+
   keyObservations: z
     .array(z.string())
     .describe(
@@ -80,7 +151,7 @@ export const WalletWhispererReportSchema = z.object({
           targetDate: z
             .string()
             .describe(
-              "The user’s desired completion date (e.g., '2025-12-01').",
+              "The user's desired completion date (e.g., '2025-12-01').",
             ),
           onTrack: z
             .boolean()
@@ -139,7 +210,7 @@ export const WalletWhispererReportSchema = z.object({
         .min(0)
         .max(100)
         .describe(
-          "A score between 0 and 100 indicating the user’s overall financial health.",
+          "A score between 0 and 100 indicating the user's overall financial health.",
         ),
       grade: z
         .string()

@@ -45,14 +45,41 @@ export const Chatbot = () => {
       role: message.role,
       content: message.content,
     }));
+
     startTransition(async () => {
       try {
-        await endSession(id, messagesData);
-        toast.success("Session ended successfully!");
-        router.push("/home/history");
+        const result = await endSession(id, messagesData);
+
+        if (result.success) {
+          toast.success(result.message || "Session ended successfully!");
+          router.push("/home/history");
+        } else {
+          toast.error("Failed to end session. Please try again.");
+        }
       } catch (error) {
+        // Handle specific error types
+        if (error instanceof Error) {
+          const errorMessage = error.message;
+
+          // Handle specific error codes
+          if (errorMessage.includes("AUTH_ERROR")) {
+            toast.error("Authentication error. Please log in again.");
+            // Optionally redirect to login
+            // router.push("/login");
+          } else if (errorMessage.includes("DUPLICATE_SESSION")) {
+            toast.error("This session already exists. Please try again.");
+          } else if (errorMessage.includes("VALIDATION_ERROR")) {
+            toast.error("Invalid session data. Please try again.");
+          } else if (errorMessage.includes("DB_ERROR")) {
+            toast.error("Database error. Please try again later.");
+          } else {
+            toast.error("An unexpected error occurred. Please try again.");
+          }
+        } else {
+          toast.error("An unexpected error occurred. Please try again.");
+        }
+
         console.error("Error ending session:", error);
-        toast.error("Error ending session. Please try again.");
       }
     });
   };

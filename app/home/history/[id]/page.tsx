@@ -19,6 +19,8 @@ import Link from "next/link";
 import { FinancialHealthCard } from "./financial-health-card";
 import { FinancialSnapshot } from "./financial-snapshot";
 import ForecastsAndProjections from "./forecasts-and-projections";
+import { RecentAchievements } from "./recent-achievements";
+import { NetWorth } from "./net-worth";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -145,16 +147,17 @@ export default async function SpecificHistoryPage({ params }: Props) {
           financialHealthScore={reportsData.financialHealthScore}
         />
         <FinancialSnapshot financialSnapshot={reportsData.financialSnapshot} />
-        {reportsData.forecastsAndProjections.debtPayoffProjection.currentPlan &&
-        reportsData.forecastsAndProjections.vacationSavingsGoal.amount ? (
-          <ForecastsAndProjections
-            forecastsAndProjections={reportsData.forecastsAndProjections}
-          />
-        ) : (
-          <div className="bg-card text-card-foreground rounded-xl border p-6 text-center shadow-sm">
-            No forecasts or projections available.
-          </div>
-        )}
+        <ForecastsAndProjections
+          forecastsAndProjections={reportsData.forecastsAndProjections}
+        />
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <RecentAchievements achievements={reportsData.recentAchievements} />
+        <NetWorth
+          netWorth={reportsData.netWorth}
+          currency={reportsData.financialSnapshot.currency}
+        />
       </div>
 
       <div className="space-y-3">

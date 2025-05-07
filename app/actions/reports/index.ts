@@ -10,11 +10,105 @@ async function generateReportData(context: string) {
     model: mistral("mistral-small-latest"),
     schema: WalletWhispererReportSchema,
     prompt: `
-    You are a helpful and accurate financial advisor AI. Based on the session context provided, generate a detailed financial report. Only use information directly available in the context. Do not invent or infer data that isn't explicitly stated. If any required field is missing from the context, return an empty string ("") instead of null, undefined, or fabricated values. Omit optional fields that do not apply to this session or are unsupported by the context. Your response must be a valid JSON object that adheres to the given schema. Do not include any extra commentary or text. Context input: ${context}
+    You are WalletWhisperer, a helpful and accurate financial advisor AI. Based on the session context provided, generate a detailed financial report that follows these guidelines:
+
+    1. Data Accuracy:
+       - Only use information explicitly stated in the context
+       - Do not invent, infer, or assume any data
+       - For missing required fields, return an empty string ("")
+       - Omit optional fields that aren't applicable
+       - Ensure all numerical values are valid numbers
+       - Validate dates are in correct format (YYYY-MM-DD)
+
+    2. Report Structure:
+       - Follow the schema structure exactly
+       - Ensure all required fields are present
+       - Format arrays and objects according to schema
+       - Maintain consistent data types
+       - Validate nested object structures
+
+    3. Data Processing:
+       - Calculate percentages correctly (e.g., savings rate)
+       - Format currency values appropriately
+       - Ensure dates are properly formatted
+       - Validate numerical calculations
+       - Check for logical consistency
+
+    4. Quality Checks:
+       - Verify all required fields are present
+       - Ensure no null or undefined values
+       - Validate data types match schema
+       - Check for logical data relationships
+       - Verify numerical calculations
+
+    5. Error Handling:
+       - Return empty string for missing required fields
+       - Omit optional fields that aren't applicable
+       - Ensure no invalid data types
+       - Handle missing or incomplete data gracefully
+       - Maintain schema compliance
+
+    Your response must be a valid JSON object that strictly adheres to the given schema. Do not include any extra commentary or text.
+
+    Context input: ${context}
     `,
   });
 
-  return result.object;
+  // Validate the generated object
+  try {
+    const validatedData = WalletWhispererReportSchema.parse(result.object);
+    return validatedData;
+  } catch (error) {
+    console.error("Report validation error:", error);
+    // Return a minimal valid report structure with empty values
+    return {
+      sessionGoal: "",
+      sessionSummary: {
+        topicsDiscussed: [],
+        userIntent: "",
+      },
+      financialSnapshot: {
+        currency: "USD",
+        monthlyIncome: 0,
+        fixedExpenses: 0,
+        variableExpenses: 0,
+        currentSavingsRatePercent: 0,
+        notableDebts: [],
+      },
+      recentAchievements: [],
+      netWorth: {
+        total: 0,
+        changeSinceLast: 0,
+        assetBreakdown: [],
+        liabilityBreakdown: [],
+      },
+      keyObservations: [],
+      smartSuggestions: [],
+      forecastsAndProjections: {
+        currency: "USD",
+        vacationSavingsGoal: {
+          amount: 0,
+          targetDate: "",
+          onTrack: false,
+          projectedCompletionDate: "",
+        },
+        debtPayoffProjection: {
+          currentPlan: "",
+          acceleratedPlan: {
+            extraPayment: 0,
+            newDuration: "",
+            interestSaved: 0,
+          },
+        },
+      },
+      financialHealthScore: {
+        score: 0,
+        grade: "N/A",
+        rationale: [],
+      },
+      nextStepsPrompt: "",
+    };
+  }
 }
 
 export async function generateReport(sessionId: string) {
