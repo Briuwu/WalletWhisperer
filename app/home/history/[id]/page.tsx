@@ -33,8 +33,6 @@ export default async function SpecificHistoryPage({ params }: Props) {
 
   const reports = await generateReport(id);
 
-  console.log(reports);
-
   async function handleDelete() {
     "use server";
     await deleteSession(id);
