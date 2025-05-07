@@ -1,5 +1,6 @@
 "use client";
 import { X } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +24,15 @@ export const EndSession = ({
   handleEndSession: () => void;
   isPending: boolean;
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleEndSessionClick = async () => {
+    await handleEndSession();
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -46,7 +54,7 @@ export const EndSession = ({
           <Button disabled={isPending} asChild variant="destructive">
             <Link href="/home"> go back (no save)</Link>
           </Button>
-          <Button onClick={handleEndSession} disabled={isPending}>
+          <Button onClick={handleEndSessionClick} disabled={isPending}>
             generate report
           </Button>
         </DialogFooter>
