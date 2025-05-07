@@ -18,11 +18,11 @@ import { DeleteSessionDialog } from "./delete-session-dialog";
 import Link from "next/link";
 import { FinancialHealthCard } from "./financial-health-card";
 import { FinancialSnapshot } from "./financial-snapshot";
-import ForecastsAndProjections from "./forecasts-and-projections";
 import { RecentAchievements } from "./recent-achievements";
 import { NetWorth } from "./net-worth";
 import Markdown from "react-markdown";
 import whisperer from "@/public/whisperer.png";
+import ForecastsAndProjections from "./forecasts-and-projections";
 
 type Props = {
   params: Promise<{ id: string }>;

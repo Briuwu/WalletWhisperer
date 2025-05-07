@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getSessions } from "@/app/actions/chat";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
