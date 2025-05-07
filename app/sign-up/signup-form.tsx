@@ -50,6 +50,7 @@ export function SignUpForm() {
       try {
         await signup({ email: values.email, password: values.password });
         toast.success("Account created successfully! Please log in.");
+        await new Promise((resolve) => setTimeout(resolve, 100));
         router.push("/login");
       } catch (error) {
         console.error("Form submission error", error);
