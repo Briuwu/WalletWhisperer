@@ -21,9 +21,6 @@ async function generateReportData(context: string) {
         maxRetries: 3,
       });
 
-      console.log(result.finishReason);
-      console.log(result.object);
-
       // Validate the generated object
       const validatedData = WalletWhispererReportSchema.parse(result.object);
       return validatedData;
