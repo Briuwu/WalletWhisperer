@@ -4,7 +4,7 @@ import { mistral } from "@ai-sdk/mistral";
 import { streamText, tool } from "ai";
 import { z } from "zod";
 
-const model = mistral("mistral-large-latest");
+const model = mistral("mistral-small-latest");
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
