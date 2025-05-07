@@ -55,7 +55,7 @@ export function FinancialSnapshot({ financialSnapshot }: Props) {
   };
 
   return (
-    <Card className="w-full max-w-md shadow-md">
+    <Card>
       <CardHeader>
         <CardTitle className="text-xl">Financial Snapshot</CardTitle>
         <CardDescription>
