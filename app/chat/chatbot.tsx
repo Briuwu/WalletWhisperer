@@ -30,6 +30,7 @@ export const Chatbot = () => {
           "Hey there! I'm WalletWhisperer, your friendly AI personal finance coach here to help you navigate the wild world of money.",
       },
     ],
+    maxSteps: 3,
   });
 
   // Auto-scroll to the bottom when messages change
