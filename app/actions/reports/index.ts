@@ -4,127 +4,95 @@ import { generateObject } from "ai";
 import { mistral } from "@ai-sdk/mistral";
 import { WalletWhispererReportSchema } from "./schema";
 import { createClient } from "@/utils/supabase/server";
+import { REPORT_GENERATION_SYSTEM_PROMPT } from "@/lib/constant";
 
 async function generateReportData(context: string) {
-  const result = await generateObject({
-    model: mistral("mistral-small-latest"),
-    schema: WalletWhispererReportSchema,
-    prompt: `
-    You are WalletWhisperer, a helpful and accurate financial advisor AI. Based on the session context provided, generate a detailed financial report that follows these guidelines:
+  const MAX_RETRIES = 3;
+  let attempts = 0;
+  let lastError = null;
 
-    1. Data Accuracy:
-       - Only use information explicitly stated in the context
-       - Do not invent, infer, or assume any data
-       - For missing required fields, return an empty string ("")
-       - Ensure all numerical values are valid numbers
-       - Validate dates are in correct format (YYYY-MM-DD)
+  while (attempts < MAX_RETRIES) {
+    try {
+      const result = await generateObject({
+        model: mistral("mistral-small-latest"),
+        schema: WalletWhispererReportSchema,
+        system: REPORT_GENERATION_SYSTEM_PROMPT,
+        prompt: `Context input: ${context}`,
+        maxRetries: 3,
+      });
 
-    2. Report Structure:
-       - Follow the schema structure exactly
-       - Ensure all required fields are present
-       - Format arrays and objects according to schema
-       - Maintain consistent data types
-       - Validate nested object structures
+      console.log(result.finishReason);
+      console.log(result.object);
 
-    3. Data Processing:
-       - Calculate percentages correctly (e.g., savings rate)
-       - Format currency values appropriately
-       - Ensure dates are properly formatted
-       - Validate numerical calculations
-       - Check for logical consistency
+      // Validate the generated object
+      const validatedData = WalletWhispererReportSchema.parse(result.object);
+      return validatedData;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      lastError = error;
+      attempts++;
+      console.error(`Report generation attempt ${attempts} failed:`, error);
 
-    4. Quality Checks:
-       - Verify all required fields are present
-       - Ensure no null or undefined values
-       - Validate data types match schema
-       - Check for logical data relationships
-       - Verify numerical calculations
+      if (attempts === MAX_RETRIES) {
+        console.error(
+          "Maximum retry attempts reached. Using fallback report structure.",
+        );
+        break;
+      }
 
-    5. Error Handling:
-       - Return empty for missing required fields
-       - Ensure no invalid data types
-       - Handle missing or incomplete data gracefully
-       - Maintain schema compliance
-
-    6. Financial Health Score Requirements:
-       - ALWAYS generate a financial health score between 0-100
-       - Calculate score based on available financial metrics:
-         * Savings rate (weight: 30%)
-         * Debt-to-income ratio (weight: 25%)
-         * Emergency fund adequacy (weight: 20%)
-         * Investment diversification (weight: 15%)
-         * Budget adherence (weight: 10%)
-       - Assign letter grade based on score:
-         * 90-100: A
-         * 80-89: B
-         * 70-79: C
-         * 60-69: D
-         * 0-59: F
-       - Include at least 2-3 specific rationales for the score
-       - If data is insufficient, use conservative estimates and note limitations
-
-    Your response must be a valid JSON object that strictly adheres to the given schema. Do not include any extra commentary or text.
-
-    Context input: ${context}
-    `,
-    maxRetries: 3,
-  });
-
-  // Validate the generated object
-  try {
-    const validatedData = WalletWhispererReportSchema.parse(result.object);
-    return validatedData;
-  } catch (error) {
-    console.error("Report validation error:", error);
-    // Return a minimal valid report structure with empty values
-    return {
-      sessionGoal: "",
-      sessionSummary: {
-        topicsDiscussed: [],
-        userIntent: "",
-      },
-      financialSnapshot: {
-        currency: "USD",
-        monthlyIncome: 0,
-        fixedExpenses: 0,
-        variableExpenses: 0,
-        currentSavingsRatePercent: 0,
-        notableDebts: [],
-      },
-      recentAchievements: [],
-      netWorth: {
-        total: 0,
-        changeSinceLast: 0,
-        assetBreakdown: [],
-        liabilityBreakdown: [],
-      },
-      keyObservations: [],
-      smartSuggestions: [],
-      forecastsAndProjections: {
-        currency: "USD",
-        vacationSavingsGoal: {
-          amount: 0,
-          targetDate: "",
-          onTrack: false,
-          projectedCompletionDate: "",
-        },
-        debtPayoffProjection: {
-          currentPlan: "",
-          acceleratedPlan: {
-            extraPayment: 0,
-            newDuration: "",
-            interestSaved: 0,
-          },
-        },
-      },
-      financialHealthScore: {
-        score: 0,
-        grade: "N/A",
-        rationale: [],
-      },
-      nextStepsPrompt: "",
-    };
+      // Add a small delay before retrying to avoid rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
   }
+
+  // Return a minimal valid report structure with empty values as fallback
+  return {
+    sessionGoal: "",
+    sessionSummary: {
+      topicsDiscussed: [],
+      userIntent: "",
+    },
+    financialSnapshot: {
+      currency: "USD",
+      monthlyIncome: 0,
+      fixedExpenses: 0,
+      variableExpenses: 0,
+      currentSavingsRatePercent: 0,
+      notableDebts: [],
+    },
+    recentAchievements: [],
+    netWorth: {
+      total: 0,
+      changeSinceLast: 0,
+      assetBreakdown: [],
+      liabilityBreakdown: [],
+    },
+    keyObservations: [],
+    smartSuggestions: [],
+    forecastsAndProjections: {
+      currency: "USD",
+      vacationSavingsGoal: {
+        amount: 0,
+        targetDate: "",
+        onTrack: false,
+        projectedCompletionDate: "",
+      },
+      debtPayoffProjection: {
+        currentPlan: "",
+        acceleratedPlan: {
+          extraPayment: 0,
+          newDuration: "",
+          interestSaved: 0,
+        },
+      },
+    },
+    financialHealthScore: {
+      score: 0,
+      grade: "N/A",
+      rationale: [],
+    },
+    nextStepsPrompt: "",
+  };
 }
 
 export async function generateReport(sessionId: string) {
