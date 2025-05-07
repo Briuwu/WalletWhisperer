@@ -16,7 +16,6 @@ async function generateReportData(context: string) {
        - Only use information explicitly stated in the context
        - Do not invent, infer, or assume any data
        - For missing required fields, return an empty string ("")
-       - Omit optional fields that aren't applicable
        - Ensure all numerical values are valid numbers
        - Validate dates are in correct format (YYYY-MM-DD)
 
@@ -43,7 +42,6 @@ async function generateReportData(context: string) {
 
     5. Error Handling:
        - Return empty for missing required fields
-       - Omit optional fields that aren't applicable
        - Ensure no invalid data types
        - Handle missing or incomplete data gracefully
        - Maintain schema compliance
@@ -69,7 +67,10 @@ async function generateReportData(context: string) {
 
     Context input: ${context}
     `,
+    maxRetries: 3,
   });
+
+  console.log(result.warnings);
 
   // Validate the generated object
   try {
