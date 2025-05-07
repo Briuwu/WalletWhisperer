@@ -49,11 +49,7 @@ export function RecentAchievements({ achievements }: RecentAchievementsProps) {
       <div className="grid gap-4">
         {achievements.map((achievement, idx) => {
           // Validate achievement data
-          if (
-            !achievement.achievement ||
-            !achievement.date ||
-            !achievement.impact
-          ) {
+          if (!achievement.achievement || !achievement.impact) {
             return null;
           }
 
@@ -66,9 +62,13 @@ export function RecentAchievements({ achievements }: RecentAchievementsProps) {
               )}
             >
               <div className="flex items-start justify-between">
-                <p className="font-medium">{achievement.achievement}</p>
+                <p className="max-w-52 font-medium">
+                  {achievement.achievement}
+                </p>
                 <span className="text-sm text-neutral-500">
-                  {new Date(achievement.date).toLocaleDateString()}
+                  {achievement.date
+                    ? new Date(achievement.date).toLocaleDateString()
+                    : "N/A"}
                 </span>
               </div>
               <p className="mt-2 text-sm text-neutral-600">

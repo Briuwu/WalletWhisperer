@@ -20,7 +20,7 @@ export default async function HistoryPage() {
               className="block space-y-5 rounded-md border bg-white p-5 hover:bg-neutral-50"
             >
               <div className="flex items-center justify-between">
-                <p className="font-medium">session {idx + 1}</p>
+                <p className="font-medium">session {sessions.length - idx}</p>
                 <p className="text-sm opacity-75">
                   {new Date(session.created_at).toLocaleDateString("en-US", {
                     year: "numeric",

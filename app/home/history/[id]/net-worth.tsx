@@ -13,7 +13,9 @@ export function NetWorth({ netWorth, currency = "USD" }: NetWorthProps) {
   if (
     !netWorth ||
     netWorth.total === undefined ||
-    netWorth.changeSinceLast === undefined
+    netWorth.changeSinceLast === undefined ||
+    netWorth.assetBreakdown.length === 0 ||
+    netWorth.liabilityBreakdown.length === 0
   ) {
     return (
       <div className="bg-card text-card-foreground rounded-xl border p-6 text-center shadow-sm">

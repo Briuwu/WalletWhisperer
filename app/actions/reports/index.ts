@@ -42,7 +42,7 @@ async function generateReportData(context: string) {
        - Verify numerical calculations
 
     5. Error Handling:
-       - Return empty string for missing required fields
+       - Return empty for missing required fields
        - Omit optional fields that aren't applicable
        - Ensure no invalid data types
        - Handle missing or incomplete data gracefully
@@ -53,6 +53,8 @@ async function generateReportData(context: string) {
     Context input: ${context}
     `,
   });
+
+  console.log(result.object);
 
   // Validate the generated object
   try {

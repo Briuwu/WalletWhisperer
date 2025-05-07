@@ -63,8 +63,6 @@ export async function endSession(
       user_id: user.id,
       history: JSON.stringify(validatedData.messages),
       has_generated_reports: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     });
 
     if (error) {
