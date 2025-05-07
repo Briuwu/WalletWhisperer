@@ -4,63 +4,87 @@
 
 Built with Gen Z users in mind, the chatbot provides conversational financial coaching and generates a structured JSON report summarizing key insights, forecasts, debt plans, and more.
 
-![WalletWhisperer](./public/landing-page.png)
+![WalletWhisperer Landing Page](./public/landing-page.png)
 
 ## 🚀 Features
 
-- 💬 Chat-based financial guidance using LLMs
-- 📊 Auto-generated, structured financial reports via Zod schema
-- 📈 Forecasts for savings goals and debt payoff plans
-- 💡 Smart suggestions + a financial health score + personalized summary
-- 🧾 Supabase integration
-- 🛠️ Built with Next.js 15 + App Router
+- 💬 **Smart Chat Interface**: Engage in natural conversations about your finances
+  ![Chat Interface](./public/chat-ui.png)
 
----
+- 📊 **Structured Reports**: Get clear, organized financial insights
+  ![How It Works - Reports](./public/how-it-works-1.png)
 
-## 🛠️ Stack
+- 📈 **Financial Forecasting**: Plan your savings and debt payoff with AI-powered projections
+  ![How It Works - Forecasting](./public/how-it-works-2.png)
 
-- **Full-stack**: Next.js 15 (App Router), Tailwind CSS
-- **LLM**: Mistral AI
-- **Schema Validation**: Zod
+- 💡 **Personalized Insights**: Receive tailored suggestions and a comprehensive financial health score
+  ![How It Works - Insights](./public/how-it-works-3.png)
+
+- 🧾 **Secure Data Storage**: All your financial data is safely stored in Supabase
+- 🛠️ **Modern Tech Stack**: Built with Next.js 15 + App Router for optimal performance
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), Tailwind CSS
+- **AI Engine**: Mistral AI
+- **Data Validation**: Zod
 - **Database**: Supabase (PostgreSQL)
+- **Deployment**: Vercel
 
----
+## 📊 Data Structure
 
-## 📄 Zod Schema
+All reports follow a strict [`WalletWhispererReportSchema`](./app/actions/reports/schema.ts) that ensures consistent, reliable data for:
 
-All reports returned from the LLM follow a strict [`WalletWhispererReportSchema`](./app/actions/reports/schema.ts). This ensures data consistency for:
-
-- Session summaries
-- Financial snapshots
-- Savings forecasts
-- Debt repayment projections
+- Session summaries and user intent
+- Financial snapshots (income, expenses, debt)
+- Savings forecasts and projections
+- Debt repayment plans
 - Financial health scores
+- Asset and liability breakdowns
 
----
+## 🧠 AI Features
 
-## 🧠 Prompt Design
+The chatbot uses a carefully crafted system prompt optimized for:
 
-The chatbot operates using a system prompt optimized for financial coaching, empathy, and clarity. It guides users toward revealing structured data points conversationally (goals, income, debt, etc.).
+- Empathetic financial coaching
+- Clear, jargon-free communication
+- Structured data collection
+- Personalized insights and recommendations
 
----
+## ✨ Roadmap
 
-## ✨ Upcoming Features
-
-- User accounts with report history
-- PDF export of financial reports
-- Goal reminders via email/SMS
-- More AI insight types (investments, retirement, etc.)
-
----
+- [ ] User authentication and report history
+- [ ] PDF export functionality
+- [ ] Email/SMS goal reminders
+- [ ] Investment and retirement planning
+- [ ] Mobile app development
+- [ ] Integration with financial institutions
 
 ## 🤝 Contributing
 
-Pull requests are welcome! If you’ve got ideas for prompts, financial insight modules, or improvements to the UX, feel free to open an issue or PR.
+We welcome contributions! Whether you're interested in:
 
----
+- Improving the AI prompts
+- Adding new financial insight modules
+- Enhancing the user experience
+- Fixing bugs or adding features
+
+Feel free to:
+
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
 
 ## 🔗 Links
 
-- 🌐 Live App: [https://walletwhisperer.vercel.app/](https://walletwhisperer.vercel.app/)
-- 🧠 Schema: [`WalletWhispererReportSchema`](./lib/schemas/report.ts)
-- 👾 Personal Website: [https://brianmillonte.vercel.app/](https://brianmillonte.vercel.app/)
+- 🌐 [Live App](https://walletwhisperer.vercel.app/)
+- 🧠 [Schema Definition](./app/actions/reports/schema.ts)
+- 👾 [Developer Website](https://brianmillonte.vercel.app/)
+
+## 📱 Screenshots
+
+![Feature Preview 1](./public/1.png)
+![Feature Preview 2](./public/2.png)
+![Feature Preview 3](./public/3.png)
+![Feature Preview 4](./public/4.png)
+![Feature Preview 5](./public/5.png)
