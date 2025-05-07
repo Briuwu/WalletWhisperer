@@ -14,7 +14,7 @@ async function generateReportData(context: string) {
   while (attempts < MAX_RETRIES) {
     try {
       const result = await generateObject({
-        model: mistral("mistral-small-latest"),
+        model: mistral("mistral-large-latest"),
         schema: WalletWhispererReportSchema,
         system: REPORT_GENERATION_SYSTEM_PROMPT,
         prompt: `Context input: ${context}`,
