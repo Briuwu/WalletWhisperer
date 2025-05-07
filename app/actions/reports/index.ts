@@ -48,13 +48,28 @@ async function generateReportData(context: string) {
        - Handle missing or incomplete data gracefully
        - Maintain schema compliance
 
+    6. Financial Health Score Requirements:
+       - ALWAYS generate a financial health score between 0-100
+       - Calculate score based on available financial metrics:
+         * Savings rate (weight: 30%)
+         * Debt-to-income ratio (weight: 25%)
+         * Emergency fund adequacy (weight: 20%)
+         * Investment diversification (weight: 15%)
+         * Budget adherence (weight: 10%)
+       - Assign letter grade based on score:
+         * 90-100: A
+         * 80-89: B
+         * 70-79: C
+         * 60-69: D
+         * 0-59: F
+       - Include at least 2-3 specific rationales for the score
+       - If data is insufficient, use conservative estimates and note limitations
+
     Your response must be a valid JSON object that strictly adheres to the given schema. Do not include any extra commentary or text.
 
     Context input: ${context}
     `,
   });
-
-  console.log(result.object);
 
   // Validate the generated object
   try {

@@ -203,6 +203,7 @@ export async function deleteSession(sessionId: string) {
     }
 
     revalidatePath("/home/chat");
+    revalidatePath("/home/history");
     return { success: true, message: "Session deleted successfully" };
   } catch (error) {
     if (error instanceof SessionError) {

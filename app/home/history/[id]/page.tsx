@@ -12,15 +12,17 @@ import {
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
-
-import whisperer from "@/public/whisperer.png";
-import Markdown from "react-markdown";
+import { deleteSession } from "@/app/actions/chat";
+import { redirect } from "next/navigation";
+import { DeleteSessionDialog } from "./delete-session-dialog";
 import Link from "next/link";
 import { FinancialHealthCard } from "./financial-health-card";
 import { FinancialSnapshot } from "./financial-snapshot";
 import ForecastsAndProjections from "./forecasts-and-projections";
 import { RecentAchievements } from "./recent-achievements";
 import { NetWorth } from "./net-worth";
+import Markdown from "react-markdown";
+import whisperer from "@/public/whisperer.png";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -31,6 +33,14 @@ export default async function SpecificHistoryPage({ params }: Props) {
 
   const reports = await generateReport(id);
 
+  console.log(reports);
+
+  async function handleDelete() {
+    "use server";
+    await deleteSession(id);
+    redirect("/home/history");
+  }
+
   if (!reports) {
     return (
       <div className="space-y-2 text-center">
@@ -38,12 +48,15 @@ export default async function SpecificHistoryPage({ params }: Props) {
         <p className="text-sm text-neutral-500">
           It seems like the session data was not enough to generate a report.
         </p>
-        <Link
-          href="/chat"
-          className="mx-auto block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
-        >
-          start new session
-        </Link>
+        <div className="flex items-center justify-center gap-4">
+          <Link
+            href="/chat"
+            className="block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
+          >
+            start new session
+          </Link>
+          <DeleteSessionDialog onDelete={handleDelete} variant="error" />
+        </div>
       </div>
     );
   }
@@ -55,12 +68,15 @@ export default async function SpecificHistoryPage({ params }: Props) {
         <p className="text-sm text-neutral-500">
           It seems like the session data was not enough to generate a report.
         </p>
-        <Link
-          href="/chat"
-          className="mx-auto block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
-        >
-          start new session
-        </Link>
+        <div className="flex items-center justify-center gap-4">
+          <Link
+            href="/chat"
+            className="block w-fit rounded-full bg-emerald-500 px-3 py-2 text-white"
+          >
+            start new session
+          </Link>
+          <DeleteSessionDialog onDelete={handleDelete} variant="error" />
+        </div>
       </div>
     );
   }
@@ -78,12 +94,15 @@ export default async function SpecificHistoryPage({ params }: Props) {
 
   return (
     <div className="space-y-15 py-10">
-      <div>
-        <h1 className="text-2xl font-bold">session rundown</h1>
-        <p className="text-neutral-500">
-          your generated insightful, and user-friendly post-session finance
-          reports
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">session rundown</h1>
+          <p className="text-neutral-500">
+            your generated insightful, and user-friendly post-session finance
+            reports
+          </p>
+        </div>
+        <DeleteSessionDialog onDelete={handleDelete} />
       </div>
       <div className="grid gap-5 lg:grid-cols-[.5fr_1fr]">
         <div className="space-y-3 rounded-md border border-blue-500 p-4">
