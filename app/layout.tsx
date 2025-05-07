@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -96,6 +97,7 @@ export default function RootLayout({
       <body className={`${dmSans.className} bg-slate-50 antialiased`}>
         {children}
         <Toaster richColors />
+        <Analytics />
       </body>
     </html>
   );
