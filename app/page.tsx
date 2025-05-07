@@ -2,6 +2,7 @@ import { CTASection } from "@/components/CTA-section";
 import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero-section";
 import { HowItWorksSection } from "@/components/how-it-works-section";
+import { Footer } from "@/components/ui/footer";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
         <HowItWorksSection />
         <CTASection />
       </main>
-      ;
+      <Footer />
     </>
   );
 }
