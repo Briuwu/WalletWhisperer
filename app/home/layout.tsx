@@ -10,7 +10,7 @@ export default function HomeLayout({
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
-        <SidebarTrigger />
+        <SidebarTrigger className="sticky top-4" />
         <div className="mx-auto max-w-3xl px-5">{children}</div>
       </main>
     </SidebarProvider>
