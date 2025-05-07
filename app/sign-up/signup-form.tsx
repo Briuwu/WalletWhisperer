@@ -49,7 +49,9 @@ export function SignUpForm() {
     startTransition(async () => {
       try {
         await signup({ email: values.email, password: values.password });
-        toast.success("Account created successfully! Please log in.");
+        toast.success(
+          "Account created successfully! Please verify your email.",
+        );
         await new Promise((resolve) => setTimeout(resolve, 100));
         router.push("/login");
       } catch (error) {
